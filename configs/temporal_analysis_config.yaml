@@ -1,0 +1,113 @@
+# Configuración específica para análisis temporal de ultrasonidos de plantas
+
+experiment:
+  name: "plant_temporal_analysis"
+  save_dir: "./experiments/temporal"
+  use_wandb: false
+  random_seed: 42
+
+data:
+  data_path: "./data"
+  image_size: [224, 224]
+  test_size: 0.2
+  val_size: 0.1
+  
+  # Configuración temporal específica
+  temporal_window: 24  # Horas para análisis temporal
+  sequence_length: 10  # Número de muestras en secuencia temporal
+  temporal_stride: 1   # Paso entre secuencias
+  
+  # Filtros específicos para análisis temporal
+  only_valid_sounds: true  # Solo usar sonidos etiquetados como válidos (label=1)
+  min_days_without_water: 0
+  max_days_without_water: 14
+  
+training:
+  # Configuración para modelos temporales
+  batch_size: 16  # Menor batch size para secuencias
+  epochs: 150
+  learning_rate: 5e-4
+  weight_decay: 1e-4
+  num_workers: 2
+  early_stopping_patience: 20
+
+models:
+  temporal_models:
+    - architecture: "lstm_classifier"
+      type: "rnn"
+      params:
+        input_size: 256  # Features extraídas del CNN
+        hidden_size: 128
+        num_layers: 3
+        dropout_rate: 0.3
+        bidirectional: true
+        num_classes: 2  # Puede extenderse para más clases de estrés
+    
+    - architecture: "temporal_cnn"
+      type: "cnn_1d"
+      params:
+        in_channels: 1
+        num_classes: 2
+        sequence_length: 10
+        dropout_rate: 0.2
+    
+    - architecture: "transformer_temporal"
+      type: "transformer"
+      params:
+        d_model: 256
+        nhead: 8
+        num_layers: 6
+        sequence_length: 10
+        num_classes: 2
+
+  regression_models:
+    - architecture: "days_predictor"
+      type: "regression"
+      task: "predict_days_without_water"
+      params:
+        backbone: "resnet50"
+        num_features: 512
+        dropout_rate: 0.3
+        output_activation: "relu"  # Para valores positivos
+    
+    - architecture: "stress_level_predictor"
+      type: "regression"
+      task: "predict_stress_level"
+      params:
+        backbone: "efficientnet_b3"
+        num_features: 256
+        dropout_rate: 0.2
+        output_activation: "sigmoid"  # Para valores [0,1]
+
+analysis:
+  temporal_features:
+    - "spectral_centroid_evolution"
+    - "mfcc_temporal_patterns"
+    - "energy_distribution_over_time"
+    - "frequency_peak_shifts"
+    - "amplitude_variation_patterns"
+  
+  clustering:
+    enabled: true
+    algorithms: ["kmeans", "dbscan", "hierarchical"]
+    n_clusters: [3, 5, 7, 10]  # Diferentes números de clusters a probar
+    features_for_clustering: ["mfcc", "spectral", "temporal"]
+  
+  visualization:
+    - "temporal_evolution_plots"
+    - "stress_progression_heatmaps"
+    - "frequency_analysis_over_days"
+    - "cluster_visualization"
+    - "correlation_matrices"
+
+evaluation:
+  temporal_metrics:
+    - "temporal_consistency"  # Consistencia en predicciones temporales
+    - "trend_accuracy"        # Precisión en tendencias temporales
+    - "correlation_with_days" # Correlación con días sin agua
+  
+  regression_metrics:
+    - "mae"  # Mean Absolute Error
+    - "mse"  # Mean Squared Error
+    - "r2"   # R-squared
+    - "mape" # Mean Absolute Percentage Error

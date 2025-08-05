@@ -1,0 +1,184 @@
+# Configuración para el proyecto de clasificación de ultrasonidos de plantas
+
+experiment:
+  name: "plant_ultrasonic_classification"
+  save_dir: "./experiments"
+  use_wandb: false
+  random_seed: 42
+  
+  # Objetivos del proyecto
+  objectives:
+    primary: "validity_classification"  # Clasificar sonidos válidos vs ruido
+    secondary: ["temporal_analysis", "stress_regression"]  # Análisis temporal y predicción de días sin agua
+
+data:
+  data_path: "./data"
+  image_size: [224, 224]
+  test_size: 0.2
+  val_size: 0.1
+  
+  # Configuración específica del dataset
+  multi_channel: true  # 4 canales de grabación
+  channel_analysis: true  # Analizar patrones por canal
+  temporal_features: true  # Incluir información temporal (días sin agua)
+  
+  # Filtrado de datos
+  min_duration: 0.1  # Duración mínima del audio en segundos
+  max_duration: 10.0  # Duración máxima del audio en segundos
+  
+training:
+  batch_size: 32
+  epochs: 100
+  learning_rate: 1e-3
+  weight_decay: 1e-4
+  num_workers: 4
+  early_stopping_patience: 15
+  
+  # Advanced training options
+  use_class_weights: true
+  label_smoothing: 0.1
+  mixup_alpha: 0.2
+  cutmix_alpha: 1.0
+  
+  # Optimization
+  optimizer: "adamw"  # adamw, adam, sgd
+  scheduler: "cosine_warmup"  # cosine_warmup, step, reduce_on_plateau
+  warmup_epochs: 5
+  
+  # Hyperparameter optimization
+  optimize_hyperparameters: false
+  optuna_trials: 50
+  
+  # Cross-validation
+  cross_validation: false
+  cv_folds: 5
+
+models:
+  deep_learning:
+    - architecture: "efficientnet_b4"
+      type: "cnn"
+      params:
+        model_name: "efficientnet_b4"
+        num_classes: 2
+        pretrained: true
+        dropout_rate: 0.3
+    
+    - architecture: "efficientnet_b7"
+      type: "cnn" 
+      params:
+        model_name: "efficientnet_b7"
+        num_classes: 2
+        pretrained: true
+        dropout_rate: 0.4
+    
+    - architecture: "resnet152"
+      type: "cnn"
+      params:
+        model_name: "resnet152"
+        num_classes: 2
+        pretrained: true
+        dropout_rate: 0.3
+    
+    - architecture: "vit_base"
+      type: "vit"
+      params:
+        model_name: "vit_base_patch16_224"
+        num_classes: 2
+        pretrained: true
+        dropout_rate: 0.1
+    
+    - architecture: "vit_large"
+      type: "vit"
+      params:
+        model_name: "vit_large_patch16_224"
+        num_classes: 2
+        pretrained: true
+        dropout_rate: 0.1
+    
+    - architecture: "ast_base"
+      type: "ast"
+      params:
+        num_classes: 2
+        model_size: "base"
+        pretrained: true
+    
+    - architecture: "hybrid_cnn_rnn"
+      type: "hybrid"
+      params:
+        cnn_backbone: "resnet50"
+        rnn_type: "LSTM"
+        hidden_size: 256
+        num_layers: 2
+        num_classes: 2
+        dropout_rate: 0.3
+    
+    - architecture: "multimodal_fusion"
+      type: "multimodal"
+      params:
+        spectrogram_model: "efficientnet_b4"
+        audio_feature_dim: 200
+        num_classes: 2
+        fusion_method: "attention"
+        dropout_rate: 0.3
+
+  traditional_ml:
+    enabled: true
+    models:
+      - name: "xgboost"
+        params:
+          n_estimators: 1000
+          max_depth: 8
+          learning_rate: 0.1
+          subsample: 0.8
+          colsample_bytree: 0.8
+      
+      - name: "lightgbm"
+        params:
+          n_estimators: 1000
+          max_depth: 8
+          learning_rate: 0.1
+          subsample: 0.8
+          colsample_bytree: 0.8
+      
+      - name: "random_forest"
+        params:
+          n_estimators: 500
+          max_depth: 15
+          min_samples_split: 5
+          min_samples_leaf: 2
+      
+      - name: "svm"
+        params:
+          C: 10
+          gamma: "scale"
+          kernel: "rbf"
+    
+    feature_engineering:
+      use_audio_features: true
+      use_image_features: true
+      feature_selection_k: 500
+      pca_components: 0.95  # Keep 95% of variance
+      
+  ensemble:
+    enabled: true
+    method: "voting"  # voting, stacking, blending
+    models_to_ensemble: ["efficientnet_b4", "vit_base", "xgboost", "lightgbm"]
+
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "roc_auc"
+    - "average_precision"
+  
+  plots:
+    - "confusion_matrix"
+    - "roc_curve"
+    - "precision_recall_curve"
+    - "feature_importance"
+    - "model_comparison"
+  
+  save_predictions: true
+  save_probabilities: true

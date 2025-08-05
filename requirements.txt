@@ -1,0 +1,46 @@
+# Core ML libraries - PyTorch focused
+torch
+torchvision
+torchaudio
+transformers==4.36.2
+timm==0.9.12
+scikit-learn
+xgboost==2.0.3
+lightgbm==4.1.0
+
+# Data manipulation and analysis
+numpy==1.24.4
+pandas
+scipy
+
+numba==0.61.2
+# Audio processing
+librosa==0.11.0
+soundfile==0.12.1
+audioread==3.0.1
+
+# Image processing
+opencv-python==4.8.1.78
+Pillow==10.1.0
+albumentations
+scikit-image==0.25.2
+
+# Visualization
+matplotlib
+seaborn
+plotly==5.17.0
+wandb==0.16.1
+
+# Model evaluation and utilities
+optuna
+imbalanced-learn
+mlflow
+
+# Jupyter and development
+jupyter==1.0.0
+ipywidgets==8.1.1
+tqdm==4.66.1
+
+# Utilities
+python-dotenv==1.0.0
+pyyaml==6.0.1
