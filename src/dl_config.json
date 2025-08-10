@@ -1,0 +1,9 @@
+{
+  "epochs": 25,
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "duration": 2.0,
+  "save_every": 1,
+  "sample_size": null,
+  "device": "cuda"
+}

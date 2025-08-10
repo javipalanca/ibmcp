@@ -1,0 +1,39 @@
+{
+  "config": {
+    "batch_size": 64,
+    "epochs": 25,
+    "learning_rate": 0.001,
+    "duration": 2.0,
+    "device": "cuda:0",
+    "save_every": 1,
+    "resume_from_checkpoint": false,
+    "use_multi_gpu": true,
+    "gpu_strategy": "optimal"
+  },
+  "gpu_info": {
+    "device": "cuda:0",
+    "multi_gpu": true,
+    "gpu_count": 2,
+    "batch_size_optimized": 64,
+    "batch_size_original": 64
+  },
+  "models_trained": [
+    "gru"
+  ],
+  "results_summary": {
+    "gru": {
+      "accuracy": 97.50552573413324,
+      "auc": 0.9554459919898368
+    }
+  },
+  "save_info": {
+    "gru": {
+      "model_path": "../models/gru_model_20250808_220836.pt",
+      "full_model_path": "../models/gru_full_model_20250808_220836.pt",
+      "results_path": "../models/gru_results_20250808_220836.json",
+      "metrics_path": "../models/gru_metrics_20250808_220836.csv",
+      "timestamp": "20250808_220836"
+    }
+  },
+  "timestamp": "2025-08-08T22:08:36.877281"
+}

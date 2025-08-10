@@ -1,0 +1,39 @@
+{
+  "config": {
+    "batch_size": 64,
+    "epochs": 25,
+    "learning_rate": 0.001,
+    "duration": 2.0,
+    "device": "cuda:0",
+    "save_every": 1,
+    "resume_from_checkpoint": false,
+    "use_multi_gpu": true,
+    "gpu_strategy": "optimal"
+  },
+  "gpu_info": {
+    "device": "cuda:0",
+    "multi_gpu": true,
+    "gpu_count": 2,
+    "batch_size_optimized": 64,
+    "batch_size_original": 64
+  },
+  "models_trained": [
+    "cnn1d"
+  ],
+  "results_summary": {
+    "cnn1d": {
+      "accuracy": 95.87411851384064,
+      "auc": 0.9202533320137906
+    }
+  },
+  "save_info": {
+    "cnn1d": {
+      "model_path": "../models/cnn1d_model_20250809_052055.pt",
+      "full_model_path": "../models/cnn1d_full_model_20250809_052055.pt",
+      "results_path": "../models/cnn1d_results_20250809_052055.json",
+      "metrics_path": "../models/cnn1d_metrics_20250809_052055.csv",
+      "timestamp": "20250809_052055"
+    }
+  },
+  "timestamp": "2025-08-09T05:20:55.399412"
+}
