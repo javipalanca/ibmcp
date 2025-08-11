@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-08-10 14:46:56",
+  "total_duration_seconds": 23.91364097595215,
+  "results": {
+    "gru": {
+      "success": true,
+      "duration": 3.009897232055664
+    },
+    "transformer": {
+      "success": true,
+      "duration": 2.9544215202331543
+    },
+    "wavenet": {
+      "success": true,
+      "duration": 2.93408465385437
+    }
+  },
+  "comparison_baseline": {
+    "cnn_waveform": {
+      "r2": 0.1073,
+      "rmse": 40.0
+    },
+    "cnn_spectrogram": {
+      "r2": 0.0397,
+      "rmse": 41.49
+    },
+    "lstm": {
+      "r2": 0.107,
+      "rmse": 40.01
+    }
+  }
+}
